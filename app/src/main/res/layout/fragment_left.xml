@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    tools:context=".LeftFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ListView
+        android:animationCache="false"
+        android:scrollingCache="false"
+        android:smoothScrollbar="true"
+        android:choiceMode="singleChoice"
+        android:dividerHeight="2px"
+        android:layout_marginBottom="210dp"
+        android:id="@+id/leftAudioList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </ListView>
+
+</FrameLayout>

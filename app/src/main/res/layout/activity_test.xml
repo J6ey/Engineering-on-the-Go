@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/test_container"
+    android:background="@color/whiteBG"
+    android:layout_marginLeft="22dp"
+    android:layout_marginRight="22dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:layout_weight="10"
+        android:id="@+id/questionsLeft"
+        android:layout_gravity="right"
+        android:textSize="15sp"
+        android:text="0/10"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp" />
+
+    <TextView
+        android:textColor="@color/greyText"
+        android:gravity="center"
+        android:layout_weight="30"
+        android:id="@+id/question"
+        android:textSize="18sp"
+        android:text="A water-type extinguisher is suitable for putting out a fire caused by burning all of the following except which of the following answers"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp" />
+    <TextView
+        android:id="@+id/score"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:layout_weight="7"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+    <LinearLayout
+        android:layout_marginBottom="10dp"
+        android:layout_weight="75"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <Button
+            android:visibility="gone"
+            android:textAllCaps="false"
+            android:layout_marginBottom="14dp"
+            android:id="@+id/choice1"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/greyText"
+            android:textSize="13sp"
+            android:text="Answer 1 Answer 1 "
+            android:layout_width="match_parent"
+            android:layout_height="45dp" />
+
+        <Button
+            android:visibility="gone"
+            android:textAllCaps="false"
+            android:layout_marginBottom="14dp"
+            android:id="@+id/choice2"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/greyText"
+            android:textSize="13sp"
+            android:text="Answer 1 Answer 1 "
+            android:layout_width="match_parent"
+            android:layout_height="45dp" />
+
+        <Button
+            android:visibility="gone"
+            android:textAllCaps="false"
+            android:layout_marginBottom="14dp"
+            android:id="@+id/choice3"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/greyText"
+            android:textSize="13sp"
+            android:text="Answer 1 Answer 1 "
+            android:layout_width="match_parent"
+            android:layout_height="45dp" />
+
+        <Button
+            android:visibility="gone"
+            android:textAllCaps="false"
+            android:layout_marginBottom="14dp"
+            android:id="@+id/choice4"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/greyText"
+            android:textSize="13sp"
+            android:text="Answer 1 Answer 1 "
+            android:layout_width="match_parent"
+            android:layout_height="45dp" />
+
+        <Button
+            android:visibility="gone"
+            android:textAllCaps="false"
+            android:layout_marginBottom="14dp"
+            android:id="@+id/choice5"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/greyText"
+            android:textSize="13sp"
+            android:text="Answer 1 Answer 1 "
+            android:layout_width="match_parent"
+            android:layout_height="45dp" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_weight="12"
+        android:layout_gravity="right"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp">
+        <ImageButton
+            android:visibility="gone"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="13dp"
+            android:background="@color/whiteBG"
+            android:src="@android:drawable/ic_menu_info_details"
+            android:id="@+id/expButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_marginBottom="15dp"
+            android:textColor="@color/greyText"
+            android:id="@+id/nextButton"
+            android:background="@drawable/custom_button"
+            android:textAllCaps="false"
+            android:text="Next"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" />
+
+
+
+    </LinearLayout>
+
+
+
+
+
+
+</LinearLayout>

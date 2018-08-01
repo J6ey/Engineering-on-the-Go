@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_margin="5dp"
+    android:id="@+id/chooseLeftRight"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/bottomButtons"
+        android:layout_weight="80"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <Button
+            android:textColor="@drawable/button_text_color"
+            android:layout_marginRight="2.5dp"
+            android:background="@drawable/left_button"
+            android:id="@+id/leftButton"
+            android:textSize="19sp"
+            android:textAllCaps="false"
+            android:text="Listen to Recordings\n♬"
+            android:layout_weight="50"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:textColor="@drawable/button_text_color"
+            android:layout_marginLeft="2.5dp"
+            android:background="@drawable/right_button"
+            android:id="@+id/rightButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:text="Test Your Knowledge\n✎"
+            android:textAllCaps="false"
+            android:textSize="19sp" />
+    </LinearLayout>
+
+    <Button
+        android:textColor="@drawable/button_text_color"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/top_button"
+        android:id="@+id/topButton"
+        android:textSize="19sp"
+        android:textAllCaps="false"
+        android:text="Return to Topics\n📖"
+        android:layout_weight="20"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+
+
+
+</LinearLayout>

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "252807133044",
+    "firebase_url": "https://engotg-7a25a.firebaseio.com",
+    "project_id": "engotg-7a25a",
+    "storage_bucket": "engotg-7a25a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:252807133044:android:a315bafe8a54ff51",
+        "android_client_info": {
+          "package_name": "com.engotg.creator.engotg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "252807133044-p1t2hp0jlgt2t2un2bl4ih9si0mumcb8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBauvV--8Y8e-eMj16ty38PoTFOkuhm9LA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
