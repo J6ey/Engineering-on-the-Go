@@ -1,4 +1,4 @@
-# Engineering on the Go (engOTG)
+# Engineering on the Go (EngOTG)
 ***
   EngOTG is an Android project that provides auditory learning in physics concepts via audio reviews and interactive 
   
