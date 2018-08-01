@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="buttonGrey">#d6d7d7</color>
+    <color name="audioContainer">#ededed</color>
     <color name="black">#000000</color>
     <color name="red">#FF5E5E</color>
     <color name="orange">#FFE62E</color>

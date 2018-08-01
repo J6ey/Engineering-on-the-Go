@@ -1,13 +1,17 @@
 package com.engotg.creator.engotg;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,6 +23,7 @@ import android.widget.PopupWindow;
 
 public class LearnTestActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private final int MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 999;
     private Button leftButton, rightButton, topButton,
             set1, set2, set3, set4, set5;
     private PopupWindow popupWindow;
@@ -72,6 +77,12 @@ public class LearnTestActivity extends AppCompatActivity implements View.OnClick
             }
             finish();
         } else {
+            if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},
+                        MY_PERMISSIONS_REQUEST_RECORD_AUDIO);
+            }
+
             if(popupWindow.isShowing()){
                 popupWindow.dismiss();
             } else {

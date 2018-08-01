@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="55dp">
         <TextView
+            android:paddingLeft="10dp"
             android:layout_weight="90"
             android:typeface="sans"
             android:id="@+id/audio_text"

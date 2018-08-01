@@ -17,23 +17,40 @@
         android:text="0/10"
         android:layout_width="wrap_content"
         android:layout_height="0dp" />
-
-    <TextView
-        android:textColor="@color/greyText"
-        android:gravity="center"
+    <android.support.v7.widget.LinearLayoutCompat
+        android:padding="3dp"
+        android:id="@+id/questionFrame"
+        android:background="@drawable/audio_control_frame"
         android:layout_weight="30"
-        android:id="@+id/question"
-        android:textSize="18sp"
-        android:text="A water-type extinguisher is suitable for putting out a fire caused by burning all of the following except which of the following answers"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp" />
-    <TextView
-        android:id="@+id/score"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:layout_weight="7"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        android:layout_height="0dp">
+        <TextView
+            android:textColor="@color/greyText"
+            android:gravity="center"
+            android:id="@+id/question"
+            android:textSize="18sp"
+            android:text="A water-type extinguisher is suitable for putting out a fire caused by burning all of the following except which of the following answers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:visibility="invisible"
+        android:gravity="center"
+        android:id="@+id/scoreFrame"
+        android:background="@drawable/audio_control_frame"
+        android:layout_width="match_parent"
+        android:layout_weight="7"
+        android:layout_height="0dp">
+        <TextView
+            android:id="@+id/score"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </android.support.v7.widget.LinearLayoutCompat>
+
 
     <LinearLayout
         android:layout_marginBottom="10dp"
@@ -106,29 +123,45 @@
 
     </LinearLayout>
     <LinearLayout
+        android:background="@color/greyText"
         android:orientation="horizontal"
         android:layout_weight="12"
         android:layout_gravity="right"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp">
+
         <ImageButton
-            android:visibility="gone"
-            android:layout_marginEnd="25dp"
-            android:layout_marginBottom="13dp"
+            android:layout_weight="25"
             android:background="@color/whiteBG"
-            android:src="@android:drawable/ic_menu_info_details"
-            android:id="@+id/expButton"
-            android:layout_width="wrap_content"
+            android:src="@drawable/ico_mic"
+            android:id="@+id/mic"
+            android:layout_width="0dp"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:layout_marginBottom="15dp"
+        <ImageButton
+            android:layout_weight="25"
+            android:background="@color/whiteBG"
+            android:src="@drawable/ico_speak"
+            android:id="@+id/speaker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:visibility="gone"
+            android:layout_weight="25"
+            android:background="@color/whiteBG"
+            android:src="@drawable/ico_info"
+            android:id="@+id/expButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:layout_weight="25"
+            android:background="@color/whiteBG"
             android:textColor="@color/greyText"
+            android:src="@drawable/ico_next"
             android:id="@+id/nextButton"
-            android:background="@drawable/custom_button"
-            android:textAllCaps="false"
-            android:text="Next"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content" />
 
 
