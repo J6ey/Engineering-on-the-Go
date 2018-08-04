@@ -51,7 +51,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private Button topicsButton, menuButton;
+    private ImageButton topicsButton, menuButton;
     static ImageButton button_pause_play;
     static SeekBar seekbar;
     private TextView timer;

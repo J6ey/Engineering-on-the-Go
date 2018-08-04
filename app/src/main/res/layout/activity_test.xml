@@ -9,8 +9,9 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:layout_weight="10"
+        android:layout_weight="5"
         android:id="@+id/questionsLeft"
         android:layout_gravity="right"
         android:textSize="15sp"
@@ -21,7 +22,7 @@
         android:padding="3dp"
         android:id="@+id/questionFrame"
         android:background="@drawable/audio_control_frame"
-        android:layout_weight="30"
+        android:layout_weight="35"
         android:layout_width="match_parent"
         android:layout_height="0dp">
         <TextView

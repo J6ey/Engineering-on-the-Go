@@ -88,14 +88,12 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <Button
+                <ImageButton
+                    android:background="#ededed"
+                    android:src="@drawable/yellow_topic_img_button"
                     android:layout_marginBottom="10dp"
                     android:layout_weight="1.5"
-                    android:textSize="17sp"
-                    android:textColor="@color/whiteBG"
-                    android:background="@drawable/custom_button2"
                     android:textAllCaps="false"
-                    android:text="Topics"
                     android:id="@+id/topicButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -104,14 +102,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <Button
+                <ImageButton
+                    android:background="#ededed"
+
+                    android:src="@drawable/yellow_menu_img_button"
                     android:layout_marginBottom="10dp"
                     android:layout_weight="1.5"
-                    android:textSize="17sp"
-                    android:textColor="@color/whiteBG"
-                    android:background="@drawable/custom_button2"
                     android:textAllCaps="false"
-                    android:text="Menu"
                     android:id="@+id/menuButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

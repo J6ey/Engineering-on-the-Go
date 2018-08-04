@@ -24,6 +24,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+
 import io.paperdb.Paper;
 
 public class TopicActivity extends AppCompatActivity implements View.OnClickListener{
@@ -96,9 +99,23 @@ public class TopicActivity extends AppCompatActivity implements View.OnClickList
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = connectivityManager.getActiveNetworkInfo();
         if(info != null && info.isConnected()){
+//            if(info.getType() == ConnectivityManager.TYPE_WIFI){
+//                return isWifiInternetAvailable();
+//            } else if (info.getType() == ConnectivityManager.TYPE_MOBILE){
+//                return true;
+//            }
             return true;
         }
         return false;
+    }
+
+    private boolean isWifiInternetAvailable(){
+        try {
+            InetAddress ipAddr = InetAddress.getByName("google.com");
+            return !ipAddr.equals("");
+        } catch (Exception e){
+            return false;
+        }
     }
 
     public void onClick(View v){

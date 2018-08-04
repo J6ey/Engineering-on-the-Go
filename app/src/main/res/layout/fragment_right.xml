@@ -8,7 +8,7 @@
 
     <!-- TODO: Update blank fragment layout -->
     <android.support.v7.widget.LinearLayoutCompat
-        android:layout_marginBottom="255dp"
+        android:layout_marginBottom="240dp"
         android:background="@drawable/audio_control_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

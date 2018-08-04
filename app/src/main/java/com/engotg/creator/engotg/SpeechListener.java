@@ -52,19 +52,32 @@ public class SpeechListener implements RecognitionListener{
             if(data.contains("repeat")){
                 TestActivity.speakBtn.performClick();
             } else if(data.contains("next")){
+                TestActivity.tipInfo.dismiss();
                 TestActivity.next.performClick();
             } else if(data.contains("explain")) {
                 if(TestActivity.answerInfo.isShown()){
                     TestActivity.answerInfo.performClick();
                 }
             } else {
-                for (int i = 0; i < data.size(); i++) {
-                    char letter = data.get(i).toUpperCase().charAt(0);
-                    if(letter - 65 < TestActivity.choiceArray.length &&
-                            letter >= 65){
-                        if(TestActivity.choiceArray[letter - 65].isEnabled()){
-                            TestActivity.choiceArray[letter - 65].performClick();
-                            break;
+                System.out.println(data);
+                if(data.contains("a") || data.contains("hey")){
+                    performClick(0);
+                } else if(data.contains("be") || data.contains("B") || data.contains("bee")){
+                    performClick(1);
+                } else if(data.contains("see") || data.contains("C") || data.contains("sea")){
+                    performClick(2);
+                } else if(data.contains("d") || data.contains("Dee")){
+                    performClick(3);
+                } else if(data.contains("e") || data.contains("e e")){
+                    performClick(4);
+                } else {
+                    for (String strData : data) {
+                        for (int i = 0; i < TestActivity.choiceArray.length; i++) {
+                            if(strData.equalsIgnoreCase(TestActivity.choiceArray[i].getText().toString())
+                                    && TestActivity.choiceArray[i].isEnabled()){
+                                TestActivity.choiceArray[i].performClick();
+                                break;
+                            }
                         }
                     }
                 }
@@ -72,10 +85,20 @@ public class SpeechListener implements RecognitionListener{
         } else {
             if(data.contains("repeat")){
                 TestActivity.speakBtn.performClick();
-            } else if(data.contains("try again")){
+            } else if(data.contains("try again") ||
+                    data.contains("try") || data.contains("again")){
                 TestActivity.tryAgain.performClick();
-            } else if(data.contains("back to menu")){
+            } else if(data.contains("back to menu") ||
+                    data.contains("go back to menu") || data.contains("menu")){
                 TestActivity.menu.performClick();
+            }
+        }
+    }
+
+    public void performClick(int charVal){
+        if(charVal < TestActivity.choiceArray.length){
+            if(TestActivity.choiceArray[charVal].isEnabled()){
+                TestActivity.choiceArray[charVal].performClick();
             }
         }
     }

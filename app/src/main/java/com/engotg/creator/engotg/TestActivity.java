@@ -3,7 +3,7 @@ package com.engotg.creator.engotg;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.speech.RecognitionListener;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tooltip.OnDismissListener;
@@ -36,16 +35,18 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
     private TextView questionsLeft, questionText;
     static HashSet<String> choices;
-    private String answer, explanation, title, question, topic;
+    private String answer, explanation, title, question, topic, speakQuestion;
     static Button[] choiceArray;
     private Integer[] randomQuestions;
     static ImageButton answerInfo, micBtn, speakBtn, next;
     private SpeechRecognizer sr;
     private TextToSpeech tts;
-    private int questionLength, currentNum, setVal, topicVal, score;
+    private int questionLength, currentNum, setVal, topicVal, score, wrongCount;
     private LinearLayoutCompat questionFrame, scoreFrame;
     static boolean onResults;
     static Button tryAgain, menu;
+    static Tooltip tipInfo;
+    private char correctLetter;
 
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
@@ -63,6 +64,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         speakBtn = findViewById(R.id.speaker);
         answerInfo = findViewById(R.id.expButton);
         onResults = false;
+        wrongCount = 0;
         currentNum = 1;
         score = 0;
         topicVal = intent.getExtras().getInt("topic");
@@ -84,6 +86,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         question = Paper.book().read(topic + "|" +
                 "set " + setVal + "|Questions|" + randomQuestions[0]);
         questionText.setText(question);
+        speakQuestion = formatBlank(question);
 
         // Gets first answer
         answer = Paper.book().read(topic + "|" +
@@ -100,13 +103,21 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         questionsLeft.setText(currentNum + "/" + questionLength);
 
         tts = new TextToSpeech(this, this);
+        initTooltip();
 
         // Must be declared for each question
         setChoiceAmount();
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                wrongCount = 0;
+                if(SpeechListener.isListening){
+                    micBtn.setImageResource(R.drawable.ico_mic);
+                    sr.cancel();
+                    SpeechListener.isListening = false;
+                }
                 if(tts.isSpeaking()){
+                    speakBtn.setImageResource(R.drawable.ico_speak);
                     tts.stop();
                 }
                 answerInfo.setVisibility(View.GONE);
@@ -116,8 +127,10 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                     question = Paper.book().read(topic + '|' +
                             "set " + setVal + "|Questions|" + randomQuestions[currentNum]);
                     questionText.setText(question);
+                    speakQuestion = formatBlank(question);
                     explanation = Paper.book().read(topic + '|' +
                             "set " + setVal + "|Explanations|" + randomQuestions[currentNum]);
+                    initTooltip();
                     answer = Paper.book().read(topic + '|' +
                             "set " + setVal + "|Answer|" + randomQuestions[currentNum]);
                     choices = Paper.book().read(topic + '|' +
@@ -159,7 +172,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                     tryAgain.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            int newSetVal = 0;
+                            int newSetVal;
                             while((newSetVal = ThreadLocalRandom.current().nextInt(1, 6)) == setVal){}
                             finish();
                             startActivity(getIntent().putExtra("set", newSetVal));
@@ -172,24 +185,22 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     });
                 }
-                answerInfo.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(tts.isSpeaking()){
-                            tts.stop();
-                        }
-                        showTooltip(v, Gravity.TOP, v.getId());
-                    }
-                });
             }
         });
 
         speakBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(SpeechListener.isListening){
+                    micBtn.setImageResource(R.drawable.ico_mic);
+                    sr.cancel();
+                    SpeechListener.isListening = false;
+                }
                 if(tts.isSpeaking()){
+                    speakBtn.setImageResource(R.drawable.ico_speak);
                     tts.stop();
                 } else {
+                    speakBtn.setImageResource(R.drawable.ico_stop);
                     if(!onResults){
                         speakOut();
                     } else {
@@ -203,6 +214,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if(tts.isSpeaking()){
+                    speakBtn.setImageResource(R.drawable.ico_speak);
                     tts.stop();
                 }
                 if(SpeechListener.isListening){
@@ -221,17 +233,34 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         answerInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(SpeechListener.isListening){
+                    micBtn.setImageResource(R.drawable.ico_mic);
+                    sr.cancel();
+                    SpeechListener.isListening = false;
+                }
                 if(tts.isSpeaking()){
+                    speakBtn.setImageResource(R.drawable.ico_speak);
                     tts.stop();
                 }
-                showTooltip(v, Gravity.TOP, v.getId());
+                    showTooltip(v, Gravity.TOP, v.getId());
             }
         });
     }
 
+    public String formatBlank(String question){
+        if(question.contains("_")){
+            int usEnd = question.lastIndexOf('_');
+            int usStart = question.indexOf('_');
+            question = question.replace(question.substring(usStart, usEnd+1)
+                    , "blank");
+        }
+        return question;
+    }
+
     public void listen(){
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        speakBtn.setImageResource(R.drawable.ico_speak);
         micBtn.setImageResource(R.drawable.ico_stop);
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,"voice.recognition.test");
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,5);
@@ -240,24 +269,25 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void onDestroy(){
-        if(tts != null){
+        if(tts != null || tts.isSpeaking()){
             tts.stop();
             tts.shutdown();
         }
+        sr.destroy();
         super.onDestroy();
     }
 
     public void onStop(){
-        if(tts != null){
-            tts.stop();
-            tts.shutdown();
-        }
+//        if(tts.isSpeaking()){
+//            speakBtn.setImageResource(R.drawable.ico_speak);
+//            tts.stop();
+//        }
+//        if(SpeechListener.isListening){
+//            SpeechListener.isListening = false;
+//            micBtn.setImageResource(R.drawable.ico_mic);
+//            sr.stopListening();
+//        }
         super.onStop();
-    }
-
-    public void onResume(){
-        tts = new TextToSpeech(this, this);
-        super.onResume();
     }
 
     public void onInit(int status){
@@ -270,12 +300,15 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                     @Override
                     public void onStart(String utteranceId) {
-                        listen();
                     }
-
                     @Override
                     public void onDone(String utteranceId) {
-                        listen();
+                        TestActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                listen();
+                            }
+                        });
                     }
 
                     @Override
@@ -290,42 +323,45 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void speakOut(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            tts.speak(question, TextToSpeech.QUEUE_ADD,null,null);
-        } else {
-            tts.speak(question, TextToSpeech.QUEUE_ADD, null);
-        }
         speakBtn.setImageResource(R.drawable.ico_stop);
+        tts.speak(speakQuestion, TextToSpeech.QUEUE_ADD,null,null);
         String[] arr = choices.toArray(new String[choices.size()]);
+        Bundle params = new Bundle();
+        params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "onStart");
         for (int i = 0; i < arr.length; i++) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                tts.speak((char)(65 + i)+ "," + arr[i],
-                        TextToSpeech.QUEUE_ADD,null,null);
+            if(i == arr.length-1){
+                tts.speak((char) (65 + i) + "," + arr[i],
+                        TextToSpeech.QUEUE_ADD, params, "onStart");
             } else {
-                tts.speak((char)(65 + i)+ "," + arr[i],
-                        TextToSpeech.QUEUE_ADD, null);
+                tts.speak((char) (65 + i) + "," + arr[i],
+                        TextToSpeech.QUEUE_ADD, null, null);
+            }
+            if(answer.equals(arr[i])){
+                correctLetter = (char) (65 + i);
             }
         }
-
     }
 
     public void speakResults(){
-        String results = "You score, " + score + "out of" + questionLength + "." +
-                "Please say, try again to try again, or back to menu to go back to menu, " +
-                "you may also say, repeat, to repeat this message.";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            tts.speak(results, TextToSpeech.QUEUE_ADD,null,null);
-        } else {
-            tts.speak(results, TextToSpeech.QUEUE_ADD, null);
-        }
+        speakBtn.setImageResource(R.drawable.ico_stop);
+        Bundle params = new Bundle();
+        params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "onResults");
+        String results = "You score, " + score + "out of" + questionLength;
+        String options = "Please say, try again to try again, or back to menu to go back to menu";
+        String repeat = "you may also say, repeat, to repeat this message";
+        tts.speak(results, TextToSpeech.QUEUE_ADD,null,null);
+        tts.speak(options, TextToSpeech.QUEUE_ADD,null,null);
+        tts.speak(repeat, TextToSpeech.QUEUE_ADD,params,"onResults");
     }
 
     public void explain(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            tts.speak(explanation, TextToSpeech.QUEUE_ADD,null,null);
-        } else {
-            tts.speak(explanation, TextToSpeech.QUEUE_ADD, null);
-        }
+        speakBtn.setImageResource(R.drawable.ico_stop);
+        String afterExplain = "Please say, explain, to repeat, or say, next, to"
+                        + " go to the next question.";
+        Bundle params = new Bundle();
+        params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "onExplain");
+        tts.speak(explanation, TextToSpeech.QUEUE_ADD,null, null);
+        tts.speak(afterExplain, TextToSpeech.QUEUE_ADD,params, "onExplain");
     }
 
     public void setChoiceAmount(){
@@ -353,44 +389,62 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public void initTooltip(){
+        tipInfo = new Tooltip.Builder(answerInfo).setText(explanation)
+                .setTextColor(getResources().getColor(R.color.black)).setGravity(Gravity.TOP).setCornerRadius(16f).setDismissOnClick(true)
+                .setCancelable(true).setBackgroundColor(getResources().getColor(R.color.orange)).build();
+    }
+
     public void showTooltip(View v, int gravity, int id){
         explain();
-        Tooltip.Builder tipInfo = new Tooltip.Builder(answerInfo).setText(explanation)
-                .setTextColor(getResources().getColor(R.color.black)).setGravity(gravity).setCornerRadius(16f).setDismissOnClick(true)
-                .setCancelable(true).setBackgroundColor(getResources().getColor(R.color.orange));
-
         tipInfo.setOnDismissListener(new OnDismissListener() {
             @Override
             public void onDismiss() {
+                speakBtn.setImageResource(R.drawable.ico_speak);
                 tts.stop();
             }
         });
-        if(tipInfo.build().isShowing()){
-            tipInfo.build().dismiss();
-        } else {
-            tipInfo.show();
-        }
+        tipInfo.show();
+
     }
 
     public void onClick(View v){
+        if(SpeechListener.isListening){
+            micBtn.setImageResource(R.drawable.ico_mic);
+            sr.cancel();
+            SpeechListener.isListening = false;
+        }
         if(tts.isSpeaking()){
+            speakBtn.setImageResource(R.drawable.ico_speak);
             tts.stop();
         }
-        answerInfo.setVisibility(View.VISIBLE);
-        answerInfo.setEnabled(true);
         Button btn = findViewById(v.getId());
         Button btn1 = findViewById(R.id.choice1);
         Button btn2 = findViewById(R.id.choice2);
         Button btn3 = findViewById(R.id.choice3);
         Button btn4 = findViewById(R.id.choice4);
         Button btn5 = findViewById(R.id.choice5);
-        if(btn.getText().equals(answer)){
+        if(btn.getText().equals(answer)) {
+            answerInfo.setVisibility(View.VISIBLE);
+            answerInfo.setEnabled(true);
             score++;
             btn.setBackgroundResource(R.drawable.button_correct);
             speakCorrect();
-        } else {
-            btn.setBackgroundResource(R.drawable.button_wrong);
+            btn1.setEnabled(false);
+            btn2.setEnabled(false);
+            btn3.setEnabled(false);
+            btn4.setEnabled(false);
+            btn5.setEnabled(false);
+        } else if(wrongCount < 1){ // can try again
+            wrongCount++;
             speakWrong();
+            btn.setBackgroundResource(R.drawable.button_wrong);
+
+        } else {
+            answerInfo.setVisibility(View.VISIBLE);
+            answerInfo.setEnabled(true);
+            speakSorry();
+            btn.setBackgroundResource(R.drawable.button_wrong);
             if(btn1.getText().equals(answer)){
                 btn1.setBackgroundResource(R.drawable.button_correct);
             } else if (btn2.getText().equals(answer)){
@@ -402,31 +456,39 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 btn5.setBackgroundResource(R.drawable.button_correct);
             }
+            btn1.setEnabled(false);
+            btn2.setEnabled(false);
+            btn3.setEnabled(false);
+            btn4.setEnabled(false);
+            btn5.setEnabled(false);
         }
-        btn1.setEnabled(false);
-        btn2.setEnabled(false);
-        btn3.setEnabled(false);
-        btn4.setEnabled(false);
-        btn5.setEnabled(false);
+    }
+
+    public void speakSorry(){
+        speakBtn.setImageResource(R.drawable.ico_stop);
+        Bundle params = new Bundle();
+        params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "onSorry");
+        String results = "sorry, the correct answer is, " + correctLetter + "," + answer +
+                "! please say, explain, to hear an explanation," +
+                "or say, next, to go to the next question";
+        tts.speak(results, TextToSpeech.QUEUE_ADD,params,"onSorry");
     }
 
     public void speakCorrect(){
+        speakBtn.setImageResource(R.drawable.ico_stop);
+        Bundle params = new Bundle();
+        params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "onCorrect");
         String results = "correct! please say, explain, to hear an explanation," +
-                "or say, next, to go to the next question.";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            tts.speak(results, TextToSpeech.QUEUE_ADD,null,null);
-        } else {
-            tts.speak(results, TextToSpeech.QUEUE_ADD, null);
-        }
+                "or say, next, to go to the next question";
+        tts.speak(results, TextToSpeech.QUEUE_ADD,params,"onCorrect");
     }
 
     public void speakWrong(){
-        String results = "please try again.";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            tts.speak(results, TextToSpeech.QUEUE_ADD,null,null);
-        } else {
-            tts.speak(results, TextToSpeech.QUEUE_ADD, null);
-        }
+        speakBtn.setImageResource(R.drawable.ico_stop);
+        Bundle params = new Bundle();
+        params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "onWrong");
+        String results = "please try again";
+        tts.speak(results, TextToSpeech.QUEUE_ADD,params,"onWrong");
     }
 
     @Override

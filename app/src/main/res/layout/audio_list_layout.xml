@@ -12,18 +12,19 @@
         android:layout_height="55dp">
         <TextView
             android:paddingLeft="10dp"
-            android:layout_weight="90"
+            android:layout_weight="85"
             android:typeface="sans"
             android:id="@+id/audio_text"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:text="Audio Title"
             android:layout_width="0dp"
             android:layout_height="match_parent" />
         <TextView
+            android:gravity="center_horizontal"
             android:textSize="13sp"
             android:text="2:45"
             android:textColor="#A9A9A9"
-            android:layout_weight="10"
+            android:layout_weight="15"
             android:id="@+id/duration"
             android:layout_width="0dp"
             android:layout_height="match_parent" />
