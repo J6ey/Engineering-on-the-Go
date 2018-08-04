@@ -15,7 +15,6 @@
 
 
     <ImageView
-        android:scaleType="centerCrop"
         android:layout_weight="50"
         android:src="@drawable/main_logo"
         android:layout_width="wrap_content"
