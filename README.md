@@ -2,7 +2,7 @@
 ***
   EngOTG is an Android project that provides auditory learning in physics concepts via audio reviews and interactive 
   
-  voice response quizzes (IVR) for civil engineering students with the goal of 
+  voice response quizzes (IVR) for engineering students with the goal of 
   
   * increasing the student attainment of engineering concepts
   
