@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
+import android.widget.TextView;
 
 import junit.framework.Test;
 
@@ -13,8 +14,7 @@ public class SpeechListener implements RecognitionListener{
     private String TAG = "STO";
     static boolean isListening;
 
-    public void onReadyForSpeech(Bundle params)
-    {
+    public void onReadyForSpeech(Bundle params) {
         isListening = true;
         Log.d(TAG, "onReadyForSpeech");
     }
@@ -34,8 +34,11 @@ public class SpeechListener implements RecognitionListener{
     {
         Log.d(TAG, "onEndofSpeech");
     }
-    public void onError(int error)
-    {
+    public void onError(int error) {
+        if(TestActivity.errorInfo != null){
+            TestActivity.errorInfo.dismiss();
+        }
+        TestActivity.showErrorTip();
         TestActivity.micBtn.setImageResource(R.drawable.ico_mic);
         isListening = false;
         TestActivity.micBtn.performClick();
@@ -49,6 +52,9 @@ public class SpeechListener implements RecognitionListener{
         ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         Log.d(TAG, "onResults: " + data);
         if(!TestActivity.onResults){
+            if(TestActivity.errorInfo != null){
+                TestActivity.errorInfo.dismiss();
+            }
             if(data.contains("repeat")){
                 TestActivity.speakBtn.performClick();
             } else if(data.contains("next")){
@@ -59,7 +65,6 @@ public class SpeechListener implements RecognitionListener{
                     TestActivity.answerInfo.performClick();
                 }
             } else {
-                System.out.println(data);
                 if(data.contains("a") || data.contains("hey")){
                     performClick(0);
                 } else if(data.contains("be") || data.contains("B") || data.contains("bee")){
@@ -71,18 +76,31 @@ public class SpeechListener implements RecognitionListener{
                 } else if(data.contains("e") || data.contains("e e")){
                     performClick(4);
                 } else {
+                    boolean isChoice = false;
                     for (String strData : data) {
                         for (int i = 0; i < TestActivity.choiceArray.length; i++) {
-                            if(strData.equalsIgnoreCase(TestActivity.choiceArray[i].getText().toString())
+                            if(strData.equalsIgnoreCase(((TextView)TestActivity.choiceArray[i]
+                                    .getChildAt(0)).getText().toString())
                                     && TestActivity.choiceArray[i].isEnabled()){
                                 TestActivity.choiceArray[i].performClick();
+                                isChoice = true;
                                 break;
                             }
                         }
+                        if(isChoice) break;
+                    }
+                    if(!isChoice){
+                        TestActivity.showErrorTip();
+                        TestActivity.micBtn.setImageResource(R.drawable.ico_mic);
+                        isListening = false;
+                        TestActivity.micBtn.performClick();
                     }
                 }
             }
         } else {
+            if(TestActivity.errorInfo != null){
+                TestActivity.errorInfo.dismiss();
+            }
             if(data.contains("repeat")){
                 TestActivity.speakBtn.performClick();
             } else if(data.contains("try again") ||
@@ -91,6 +109,11 @@ public class SpeechListener implements RecognitionListener{
             } else if(data.contains("back to menu") ||
                     data.contains("go back to menu") || data.contains("menu")){
                 TestActivity.menu.performClick();
+            } else {
+                TestActivity.showErrorTip();
+                TestActivity.micBtn.setImageResource(R.drawable.ico_mic);
+                isListening = false;
+                TestActivity.micBtn.performClick();
             }
         }
     }

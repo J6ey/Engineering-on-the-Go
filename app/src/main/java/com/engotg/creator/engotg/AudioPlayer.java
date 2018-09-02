@@ -1,14 +1,11 @@
 package com.engotg.creator.engotg;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
@@ -19,21 +16,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class AudioPlayer extends AppCompatActivity implements View.OnClickListener{
 
@@ -57,23 +47,27 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
     private TextView timer;
     static int totalTime;
     static boolean onStart;
+    private Typeface typeface;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_player);
         Intent intent = getIntent();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        typeface = Typeface.createFromAsset(getResources().getAssets(), "fibra_one_light.otf");
+        Toolbar toolbar = (Toolbar) findViewById(R.id.bar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle(intent.getExtras().getString("title"));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        toolbar.setTitle(intent.getExtras().getString("title"));
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
         TabLayout.Tab leftTab = tabLayout.newTab();
@@ -86,27 +80,26 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
             rightTab.setText("External forces");
             topic = "Internal External Forces";
             leftSubTopic = "Internal Forces";
-            rightSubTopic = "External Forces";
         } else if (topicVal == 2) {
             leftTab.setText("Forces");
             rightTab.setText("Moments");
             topic = "Forces Moments";
             leftSubTopic = "Forces";
-            rightSubTopic = "Moments";
         } else {
             leftTab.setText("Internal forces");
             rightTab.setText("Internal stresses");
             topic = "Internal Forces Stresses";
             leftSubTopic = "Internal Forces";
-            rightSubTopic = "Internal Stresses";
         }
 
         // Left & Right Tabs
         tabLayout.addTab(leftTab);
         tabLayout.addTab(rightTab);
+        setTabFont();
 
         // Timer Label
         timer = findViewById(R.id.textTimer);
+        timer.setTypeface(typeface);
 
         // Bottom Buttons
         menuButton = findViewById(R.id.menuButton);
@@ -130,6 +123,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
 
         PlaceholderFragment.mediaPlayer.seekTo(0);
         totalTime = PlaceholderFragment.mediaPlayer.getDuration();
+
 
         // Seek Bar
         seekbar = findViewById(R.id.seekbar);
@@ -173,6 +167,21 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
         button_pause_play.setOnClickListener(this);
         menuButton.setOnClickListener(this);
         topicsButton.setOnClickListener(this);
+    }
+
+    public void setTabFont(){
+        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+        int tabCount = vg.getChildCount();
+        for (int i = 0; i < tabCount; i++) {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(i);
+            int tabChildsCount = vgTab.getChildCount();
+            for (int j = 0; j < tabChildsCount; j++) {
+                View tabViewChild = vgTab.getChildAt(j);
+                if(tabViewChild instanceof TextView) {
+                    ((TextView) tabViewChild).setTypeface(typeface);
+                }
+            }
+        }
     }
 
     @SuppressLint("HandlerLeak")
@@ -222,8 +231,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
                 }
                 break;
             case R.id.topicButton:
-                Intent topicIntent = new Intent(this, TopicActivity.class);
-                startActivity(topicIntent);
+                ((Activity)LearnTestActivity.context).finish();
                 finish();
                 break;
             case R.id.menuButton:
@@ -233,8 +241,8 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
 
     public void setItemSelected(View view){
         TextView tv = view.findViewById(R.id.audio_text);
-        tv.setTextColor(getResources().getColor(R.color.greenLogo));
-        tv.setTypeface(null, Typeface.BOLD);
+        tv.setTextColor(getResources().getColor(R.color.orange));
+        tv.setTypeface(typeface, Typeface.BOLD);
     }
 
     protected void onDestroy(){

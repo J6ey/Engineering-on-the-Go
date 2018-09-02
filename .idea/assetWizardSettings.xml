@@ -18,12 +18,23 @@
                                 <PersistentState>
                                   <option name="children">
                                     <map>
+                                      <entry key="clipArt">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="paddingPercent" value="-10" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
                                       <entry key="clipartAsset">
                                         <value>
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/E:/Users/Orchard/Downloads/IDE/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_exit_to_app_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/E:/Users/Orchard/Downloads/IDE/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/image/ic_navigate_next_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,9 +44,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ico_yellow_menu" />
+                                      <entry key="outputName" value="ico_next" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="ffe62e" />
+                                      <entry key="themeColor" value="717874" />
                                     </map>
                                   </option>
                                 </PersistentState>

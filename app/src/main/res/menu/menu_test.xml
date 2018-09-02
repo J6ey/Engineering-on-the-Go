@@ -9,14 +9,8 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/voice_control"
         android:orderInCategory="100"
-        android:title="Enable voice control"
+        android:title="Settings"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/audio_control"
-        android:orderInCategory="100"
-        android:title="Disable audio"
-        app:showAsAction="never" />
 </menu>

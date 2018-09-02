@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.engotg.creator.engotg.AppPreferenceCategory
+        android:title="General">
+        <com.engotg.creator.engotg.AppCheckBoxPreference
+            android:defaultValue="true"
+            android:key="auto_speak"
+            android:summary="Automatically read and respond"
+            android:title="Auto speak" />
+
+        <com.engotg.creator.engotg.AppCheckBoxPreference
+            android:defaultValue="true"
+            android:key="auto_input"
+            android:summary="Automatically prompt speech input"
+            android:title="Auto prompt" />
+
+        <com.engotg.creator.engotg.AppCheckBoxPreference
+            android:defaultValue="true"
+            android:key="enableTips"
+            android:summary="Remind you available speech commands"
+            android:title="Enable speech tips" />
+    </com.engotg.creator.engotg.AppPreferenceCategory>
+
+
+    <com.engotg.creator.engotg.AppPreferenceCategory android:title="Text-to-Speech">
+
+        <com.engotg.creator.engotg.AppSeekBarPreference
+            android:key="speech_rate_key"
+            android:title="Speech rate"
+            android:summary="Adjust the Text-to-Speech speech rate"
+            android:defaultValue="10"
+            android:max="40"
+            app:showSeekBarValue="false"/>
+
+        <com.engotg.creator.engotg.AppSeekBarPreference
+            android:key="pitch_key"
+            android:title="Pitch"
+            android:summary="Adjust the Text-to-Speech pitch"
+            android:defaultValue="10"
+            android:max="30"
+            app:showSeekBarValue="false"/>
+
+        <com.engotg.creator.engotg.AppPreference
+            android:key="default_speed"
+            android:summary="Reset the speed to default"
+            android:title="Reset speech rate"/>
+
+        <com.engotg.creator.engotg.AppPreference
+            android:key="default_pitch"
+            android:summary="Reset the pitch to default"
+            android:title="Reset speech pitch"/>
+
+        <com.engotg.creator.engotg.AppPreference
+            android:key="sample_key"
+            android:summary="Play a short demonstration of speech synthesis"
+            android:title="Listen to an example"/>
+
+        <com.engotg.creator.engotg.AppPreference
+            android:key="voice_data"
+            android:summary="Change Text-to-Speech voice data"
+            android:title="Change voice" />
+
+
+
+    </com.engotg.creator.engotg.AppPreferenceCategory>
+
+    <com.engotg.creator.engotg.AppPreferenceCategory android:title="@string/pref_header_about">
+
+        <com.engotg.creator.engotg.AppPreference
+            android:summary="1.0"
+            android:title="@string/title_version" />
+
+    </com.engotg.creator.engotg.AppPreferenceCategory>
+
+</PreferenceScreen>

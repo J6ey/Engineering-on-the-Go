@@ -2,37 +2,28 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_content"
+    android:background="#f9fafe"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".AudioPlayer">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
-
+        android:background="@color/quizText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/appbar_padding_top"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_weight="1"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/app_name">
-
-        </android.support.v7.widget.Toolbar>
+        <include
+            layout="@layout/app_bar"
+            android:id="@+id/bar">
+        </include>
 
         <android.support.design.widget.TabLayout
             app:tabMode="fixed"
             app:tabSelectedTextColor="#FFFFFF"
+            android:background="@color/quizText"
             app:tabTextColor="@color/greyText"
-            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+            app:tabTextAppearance="@style/CustomTabText"
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -64,6 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
+                android:textColor="#ffffff"
                 android:layout_gravity="center_horizontal"
                 android:text="00:00"
                 android:id="@+id/textTimer"
@@ -77,6 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp" />
             <SeekBar
+                android:theme="@style/SeekBarLine"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="20dp"
                 android:layout_below="@id/play_pause_button"
@@ -89,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <ImageButton
-                    android:background="#ededed"
+                    android:background="@color/blueGrey"
                     android:src="@drawable/yellow_topic_img_button"
                     android:layout_marginBottom="10dp"
                     android:layout_weight="1.5"
@@ -103,8 +96,7 @@
                     android:layout_height="wrap_content" />
 
                 <ImageButton
-                    android:background="#ededed"
-
+                    android:background="@color/blueGrey"
                     android:src="@drawable/yellow_menu_img_button"
                     android:layout_marginBottom="10dp"
                     android:layout_weight="1.5"

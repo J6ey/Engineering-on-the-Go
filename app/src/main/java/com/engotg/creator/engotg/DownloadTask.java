@@ -1,8 +1,14 @@
 package com.engotg.creator.engotg;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Typeface;
+import android.media.MediaMetadata;
+import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -33,11 +39,12 @@ import javax.net.ssl.HttpsURLConnection;
 
 import io.paperdb.Paper;
 
+import static com.engotg.creator.engotg.MainActivity.setMetaText;
+
 public class DownloadTask {
+
     private static final String TAG = "Download Task";
-    private Button topic_1, topic_2, topic_3;
     private Context context;
-    private static ProgressBar bar;
     private static TextView loadingText;
     private final String topics[] = {"Forces Moments", "Forces Moments", "Internal External Forces", "Internal External Forces"
             , "Internal Forces Stresses", "Internal Forces Stresses"};
@@ -46,20 +53,20 @@ public class DownloadTask {
     private final String subTopics[] = {"Forces", "Moments", "External Forces", "Internal Forces", "Internal Forces", "Internal Stresses"};
     private String version;
     private ArrayList<HashMap<String, String>> audioList;
+    private Typeface typeface;
+    private Intent intent;
+    private int qtnCount;
 
     private final String downloadDirectory = "EngOTG_data";
 
-    public DownloadTask(Context context, Button
-            topic_1, Button topic_2, Button topic_3, ProgressBar bar,
-                        final TextView loadingText, String serverVer){
+    public DownloadTask(Context context, final TextView loadingText, String serverVer, Intent intent){
         Paper.init(context);
         Paper.book().destroy();
+        typeface = Typeface.createFromAsset(context.getResources().getAssets(), "fibra_one_regular.otf");
         this.context = context;
-        this.topic_1 = topic_1;
-        this.topic_2 = topic_2;
-        this.topic_3 = topic_3;
-        this.bar = bar;
+        this.intent = intent;
         this.loadingText = loadingText;
+        loadingText.setTypeface(typeface);
         version = serverVer;
         audioList = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
@@ -78,6 +85,7 @@ public class DownloadTask {
                         audioList.get(i).put(iter.getKey(), iter.getValue().toString());
                     }
                 }
+                qtnCount = 0;
                 loadingText.setText("Getting test material...");
                 for (int i = 0; i < testTopics.length; i++) { // Get each test topics (3 total)
                     for (int j = 1; j <= 5; j++) { // Get each test sets (5 total)
@@ -91,12 +99,16 @@ public class DownloadTask {
                                 } else { // Questions, Answers, Explanations
                                     for (DataSnapshot inner : iter.getChildren()) {
                                         Paper.book().write(dest, inner.getValue().toString());
+                                        if(k == 1) {
+                                            qtnCount++;
+                                            Paper.book().write(testTopics[i] + " qtn", qtnCount);
+                                        }
                                     }
                                 }
                             }
                         }
-
                     }
+                    qtnCount = 0;
                 }
                 // Runs download tasks after database query completes
                 new DownloadingTask().execute();
@@ -115,6 +127,7 @@ public class DownloadTask {
         File outputFile = null;
         FileOutputStream fos = null;
         InputStream is = null;
+        int min = 0, sec = 0;
 
         @Override
         protected void onPreExecute() {
@@ -132,14 +145,9 @@ public class DownloadTask {
                 loadingText.setText("Update failed. Please retry.");
                 Log.e(TAG, "Download failed.");
             }
-            topic_1.setEnabled(true);
-            topic_2.setEnabled(true);
-            topic_3.setEnabled(true);
-            topic_1.setTextColor(0xFF5E6762);
-            topic_2.setTextColor(0xFF5E6762);
-            topic_3.setTextColor(0xFF5E6762);
-            bar.setVisibility(View.GONE);
             super.onPostExecute(aVoid);
+            ((Activity) context).startActivity(intent);
+            ((Activity) context).finish();
         }
 
         @Override
@@ -189,6 +197,23 @@ public class DownloadTask {
                         } else {
                             Log.e(TAG, "File already exists.");
                         }
+                        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+                        mmr.setDataSource(outputFile.getPath());
+                        String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                        min += Integer.parseInt(duration) / 1000 / 60;
+                        sec += Integer.parseInt(duration) / 1000 % 60;
+                        if(i == topics.length - 1){
+                            Paper.book().write(topics[i] + " min", min);
+                            Paper.book().write(topics[i] + " sec", sec);
+                        }
+                    }
+                    if(i + 1 < topics.length){
+                        if(!topics[i + 1].equals(topics[i])){
+                            Paper.book().write(topics[i] + " min", min);
+                            Paper.book().write(topics[i] + " sec", sec);
+                            min = 0;
+                            sec = 0;
+                        }
                     }
                     // Delete files not found on database
                     List<String> files = new ArrayList<>(Arrays.asList(apkStorage.list()));
@@ -212,7 +237,5 @@ public class DownloadTask {
             }
             return null;
         }
-
-
     }
 }

@@ -6,6 +6,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,7 @@ public class PlaceholderFragment extends Fragment {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
+            setItemNormal();
             view = getLayoutInflater().inflate(R.layout.audio_list_layout, null);
             TextView audioText = view.findViewById(R.id.audio_text);
             TextView duration = view.findViewById(R.id.duration);
@@ -58,6 +60,7 @@ public class PlaceholderFragment extends Fragment {
             String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
             int millisecond = Integer.parseInt(durationStr);
             duration.setText(createTimeLabel(millisecond));
+            duration.setTypeface(typeface);
             return view;
         }
     }
@@ -92,6 +95,7 @@ public class PlaceholderFragment extends Fragment {
             String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
             int millisecond = Integer.parseInt(durationStr);
             duration.setText(createTimeLabel(millisecond));
+            duration.setTypeface(typeface);
             return view;
         }
     }
@@ -103,6 +107,9 @@ public class PlaceholderFragment extends Fragment {
     static MediaPlayer mediaPlayer;
     private final String downloadDirectory = "EngOTG_data";
     private File apkStorageLeft, apkStorageRight;
+    private LeftAudioAdapter leftAudioAdapter;
+    private RightAudioAdapter rightAudioAdapter;
+    private Typeface typeface;
 
     public PlaceholderFragment() {
     }
@@ -142,6 +149,7 @@ public class PlaceholderFragment extends Fragment {
 
         View rootView = null;
         String topic = "", leftSubTopic = "", rightSubTopic ="";
+        typeface = Typeface.createFromAsset(getResources().getAssets(), "fibra_one_regular.otf");
         Intent intent = getActivity().getIntent();
         int topicVal = intent.getExtras().getInt("topic");
         switch (topicVal){
@@ -168,15 +176,14 @@ public class PlaceholderFragment extends Fragment {
         leftAudio = new ArrayList<>(Arrays.asList(apkStorageLeft.list()));
         rightAudio = new ArrayList<>(Arrays.asList(apkStorageRight.list()));
 
-        LeftAudioAdapter leftAudioAdapter = new LeftAudioAdapter();
-        final RightAudioAdapter rightAudioAdapter = new RightAudioAdapter();
+        leftAudioAdapter = new LeftAudioAdapter();
+        rightAudioAdapter = new RightAudioAdapter();
 
 
         switch(getArguments().getInt(ARG_SECTION_NUMBER)){
             case 1:
                 rootView = inflater.inflate(R.layout.fragment_left, container, false);
                 leftAudioList = rootView.findViewById(R.id.leftAudioList);
-                PhraseAdapter leftAdapter = new PhraseAdapter(0);
                 leftAudioList.setAdapter(leftAudioAdapter);
                 leftAudioList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -207,7 +214,6 @@ public class PlaceholderFragment extends Fragment {
             case 2:
                 rootView = inflater.inflate(R.layout.fragment_right, container, false);
                 rightAudioList = rootView.findViewById(R.id.rightAudioList);
-                final PhraseAdapter rightAdapter = new PhraseAdapter(1);
                 rightAudioList.setAdapter(rightAudioAdapter);
                 rightAudioList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -241,51 +247,22 @@ public class PlaceholderFragment extends Fragment {
 
     public void setItemSelected(View view){
         TextView tv = view.findViewById(R.id.audio_text);
-        tv.setTextColor(getResources().getColor(R.color.greenLogo));
-        tv.setTypeface(null, Typeface.BOLD);
+        tv.setTextColor(getResources().getColor(R.color.orange));
+        tv.setTypeface(typeface, Typeface.BOLD);
     }
 
     public void setItemNormal(){
         for (int i = 0; i < PlaceholderFragment.rightAudioList.getChildCount(); i++) {
             View v = PlaceholderFragment.rightAudioList.getChildAt(i);
             TextView tv = v.findViewById(R.id.audio_text);
-            tv.setTextColor(getResources().getColor(R.color.greyText));
-            tv.setTypeface(null, Typeface.NORMAL);
+            tv.setTextColor(getResources().getColor(R.color.mimoWhite));
+            tv.setTypeface(typeface);
         }
         for (int i = 0; i < PlaceholderFragment.leftAudioList.getChildCount(); i++) {
             View v = PlaceholderFragment.leftAudioList.getChildAt(i);
             TextView tv = v.findViewById(R.id.audio_text);
-            tv.setTextColor(getResources().getColor(R.color.greyText));
-            tv.setTypeface(null, Typeface.NORMAL);
-        }
-    }
-
-    private class PhraseAdapter extends BaseAdapter {
-        int direction;
-        public PhraseAdapter(int direction){
-            this.direction = direction;
-        }
-        public int getCount(){
-            if(direction == 0) {
-                return audioLeftList.size();
-            }
-            return audioRightList.size();
-        }
-        public Object getItem(int position) {
-            return null;
-        }
-        public long getItemId(int i){
-            return 0;
-        }
-        public View getView(int i, View view, ViewGroup viewGroup){
-            view = getLayoutInflater().inflate(R.layout.audio_list_layout, null);
-            TextView viewAudio = view.findViewById(R.id.audio_text);
-            if(direction == 0){
-                viewAudio.setText(audioLeftList.get(i));
-            } else {
-                viewAudio.setText(audioRightList.get(i));
-            }
-            return view;
+            tv.setTextColor(getResources().getColor(R.color.mimoWhite));
+            tv.setTypeface(typeface);
         }
     }
 }

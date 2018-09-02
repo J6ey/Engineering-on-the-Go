@@ -7,27 +7,28 @@
 
     <LinearLayout
         android:paddingTop="5dp"
+        android:paddingBottom="15dp"
         android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
         <TextView
+            android:textColor="#ffffff"
             android:paddingLeft="10dp"
             android:layout_weight="85"
-            android:typeface="sans"
             android:id="@+id/audio_text"
-            android:textSize="17sp"
+            android:textSize="15sp"
             android:text="Audio Title"
             android:layout_width="0dp"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
         <TextView
             android:gravity="center_horizontal"
-            android:textSize="13sp"
+            android:textSize="11sp"
             android:text="2:45"
-            android:textColor="#A9A9A9"
+            android:textColor="#ffffff"
             android:layout_weight="15"
             android:id="@+id/duration"
             android:layout_width="0dp"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 
