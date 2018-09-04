@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
+
 import io.paperdb.Paper;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Typeface typeface;
     private boolean validated;
     private Context context;
+    private ArrayList<int[]> colorComb;
 
     protected void onCreate(Bundle savedInstanceState) {
         Paper.init(this);
@@ -38,9 +42,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         greenMicro = findViewById(R.id.green_micro);
         blueMicro = findViewById(R.id.blue_micro);
         purpMicro = findViewById(R.id.purple_micro);
-        Glide.with(this).load(R.drawable.green_micro).into(greenMicro);
-        Glide.with(this).load(R.drawable.blue_micro).into(blueMicro);
-        Glide.with(this).load(R.drawable.purp_micro).into(purpMicro);
+        Glide.with(this).load(R.drawable.scope_micro).into(greenMicro);
+        Glide.with(this).load(R.drawable.gears_micro).into(blueMicro);
+        Glide.with(this).load(R.drawable.chem_micro).into(purpMicro);
         topicText_1 = findViewById(R.id.topic_1_text);
         topicText_2 = findViewById(R.id.topic_2_text);
         topicText_3 = findViewById(R.id.topic_3_text);
@@ -73,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         topic_2 = findViewById(R.id.topic_2);
         topic_3 = findViewById(R.id.topic_3);
         setMetaText();
+        initColors();
         topic_1.setOnClickListener(this);
         topic_2.setOnClickListener(this);
         topic_3.setOnClickListener(this);
@@ -107,6 +112,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 topicQuiz[i].setVisibility(View.GONE);
                 bookSymbol[i].setVisibility(View.GONE);
             }
+        }
+    }
+
+    public void initColors(){
+        colorComb = new ArrayList<>();
+        colorComb.add(new int[]{0xffCADBC0, 0xffC94277, 0xff2F0A28});
+        colorComb.add(new int[]{0xffBFDBF7, 0xff022B3A, 0xff1F7A8C});
+        colorComb.add(new int[]{0xff373F51, 0xff008DD5, 0xffF56476});
+        colorComb.add(new int[]{0xffB7ADCF, 0xff22181C, 0xff84DCCF});
+        colorComb.add(new int[]{0xff7F95D1, 0xff77625C, 0xff84DCCF});
+        colorComb.add(new int[]{0xff32292F, 0xff4F646F, 0xff84DCCF});
+        colorComb.add(new int[]{0xff3C3744, 0xff3D52D5, 0xff84DCCF});
+        colorComb.add(new int[]{0xff33658A, 0xff86BBD8, 0xff3D52D5});
+        colorComb.add(new int[]{0xffD5DCF9, 0xff8EDCE6, 0xff3D52D5});
+        colorComb.add(new int[]{0xffD5DCF9, 0xff3D52D5, 0xff84DCCF});
+        colorComb.add(new int[]{0xff85BDBF, 0xff57737A, 0xff040F0F});
+        colorComb.add(new int[]{0xff93B5C6, 0xffDDEDAA, 0xffBD4F6C});
+        colorComb.add(new int[]{0xff011638, 0xff2E294E, 0xff9055A2});
+        colorComb.add(new int[]{0xffACACDE, 0xffABDAFC, 0xff545E75});
+        colorComb.add(new int[]{0xff1e96ff, 0xff32b964, 0xff9553f1}); // first run
+        colorComb.add(new int[]{0xffE9D758, 0xff297373, 0xff39393A});
+        colorComb.add(new int[]{0xff52154E, 0xff111344, 0xffE6E6E6});
+        colorComb.add(new int[]{0xff1F2041, 0xff4B3F72, 0xffE6E6E6});
+        colorComb.add(new int[]{0xffA3D9FF, 0xff96E6B3, 0xff7E6B8F});
+
+        if(Paper.book().read("firstRun") == null){
+            Paper.book().write("firstRun", false);
+            greenMicro.setBackgroundColor(0xff1e96ff);
+            blueMicro.setBackgroundColor(0xff32b964);
+            purpMicro.setBackgroundColor(0xff9553f1);
+        } else {
+            int palette = ThreadLocalRandom.current().nextInt(0, colorComb.size());
+        System.out.println(Integer.toHexString(colorComb.get(palette)[0]));
+        System.out.println(Integer.toHexString(colorComb.get(palette)[1]));
+        System.out.println(Integer.toHexString(colorComb.get(palette)[2]));
+            greenMicro.setBackgroundColor(colorComb.get(palette)[0]);
+            blueMicro.setBackgroundColor(colorComb.get(palette)[1]);
+            purpMicro.setBackgroundColor(colorComb.get(palette)[2]);
         }
     }
 

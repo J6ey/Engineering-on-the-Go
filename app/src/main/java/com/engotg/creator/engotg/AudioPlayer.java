@@ -25,6 +25,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import io.paperdb.Paper;
+
 public class AudioPlayer extends AppCompatActivity implements View.OnClickListener{
 
     /**
@@ -41,7 +43,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private ImageButton topicsButton, menuButton;
+    private ImageButton topicsButton, menuButton, settings;
     static ImageButton button_pause_play;
     static SeekBar seekbar;
     private TextView timer;
@@ -66,6 +68,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
+        settings = findViewById(R.id.settings);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -164,6 +167,26 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
                 }
             }
         }).start();
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!PlaceholderFragment.mediaPlayer.isPlaying()){
+                    // Plays
+                    PlaceholderFragment.mediaPlayer.start();
+                    if(onStart){
+                        setItemSelected(PlaceholderFragment.leftAudioList.getRootView());
+                        onStart = false;
+                    }
+                    button_pause_play.setImageResource(R.drawable.ic_pause);
+                } else {
+                    // Pauses
+                    PlaceholderFragment.mediaPlayer.pause();
+                    button_pause_play.setImageResource(R.drawable.ic_play);
+                }
+                startActivityForResult(new Intent(v.getContext(), SettingsActivity.class), 1);
+            }
+        });
         button_pause_play.setOnClickListener(this);
         menuButton.setOnClickListener(this);
         topicsButton.setOnClickListener(this);
@@ -180,6 +203,19 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
                 if(tabViewChild instanceof TextView) {
                     ((TextView) tabViewChild).setTypeface(typeface);
                 }
+            }
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == 1){
+            if(resultCode == Activity.RESULT_OK){
+                double pitch = data.getDoubleExtra("pitch", 1);
+                double speed = data.getDoubleExtra("speed", 1);
+                Paper.book().write("pitchKey", pitch);
+                Paper.book().write("speedKey", speed);
+            }
+            if(resultCode == Activity.RESULT_CANCELED){
             }
         }
     }

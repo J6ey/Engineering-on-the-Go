@@ -26,6 +26,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Tex
         tts = new TextToSpeech(this, this);
         pitchSlider = (SeekBarPreference) findPreference("pitch_key");
         rateSlider = (SeekBarPreference) findPreference("speech_rate_key");
+        pitchSlider.setMin(1);
+        rateSlider.setMin(1);
         Preference voiceSelection = findPreference("voice_data");
         voiceSelection.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

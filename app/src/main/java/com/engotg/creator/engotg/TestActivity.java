@@ -47,7 +47,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private String answer, explanation, question, topic, speakQuestion;
     static CardView[] choiceArray;
     private Integer[] randomQuestions;
-    static ImageButton answerInfo, micBtn, speakBtn, next;
+    static ImageButton answerInfo, micBtn, speakBtn, next, settings;
     private SpeechRecognizer sr;
     private TextToSpeech tts;
     private int questionLength, currentNum, setVal, topicVal, score, wrongCount;
@@ -83,6 +83,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         speakBtn = findViewById(R.id.speaker);
         answerInfo = findViewById(R.id.expButton);
         toolbar = findViewById(R.id.bar);
+        settings = findViewById(R.id.settings);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -220,6 +221,20 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tts.stop();
+                speakBtn.setImageResource(R.drawable.ico_speak);
+                if(SpeechListener.isListening) {
+                    micBtn.setImageResource(R.drawable.ico_mic);
+                    sr.cancel();
+                    SpeechListener.isListening = false;
+                }
+                startActivityForResult(new Intent(v.getContext(), SettingsActivity.class), 1);
+            }
+        });
+
         speakBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -310,7 +325,6 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(requestCode == 1){
             if(resultCode == Activity.RESULT_OK){
-                System.out.println("HAS RESULTS");
                 pitch = data.getDoubleExtra("pitch", 1);
                 speed = data.getDoubleExtra("speed", 1);
                 Paper.book().write("pitchKey", pitch);
@@ -319,7 +333,6 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 tts.setSpeechRate((float) speed);
             }
             if(resultCode == Activity.RESULT_CANCELED){
-                System.out.println("NO RESULT");
             }
         }
     }
@@ -613,29 +626,4 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         tts.speak(results, TextToSpeech.QUEUE_ADD,params,"onWrong");
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_test, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.topic_button) {
-            ((Activity)LearnTestActivity.context).finish();
-            finish();
-        } else {
-            tts.stop();
-            speakBtn.setImageResource(R.drawable.ico_speak);
-            if(SpeechListener.isListening) {
-                micBtn.setImageResource(R.drawable.ico_mic);
-                sr.cancel();
-                SpeechListener.isListening = false;
-            }
-            startActivityForResult(new Intent(this, SettingsActivity.class), 1);
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

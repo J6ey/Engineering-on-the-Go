@@ -23,6 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class LearnTestActivity extends AppCompatActivity implements View.OnClickListener{
 
     private final int MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 999;
@@ -34,6 +37,7 @@ public class LearnTestActivity extends AppCompatActivity implements View.OnClick
     private int topicVal;
     private String topicTitle;
     private Typeface typeface;
+    private ArrayList<int[]> colorComb;
     static Context context;
     private TextView leftText, rightText, bottomText;
 
@@ -68,7 +72,7 @@ public class LearnTestActivity extends AppCompatActivity implements View.OnClick
         set3 = findViewById(R.id.set3);
         set4 = findViewById(R.id.set4);
         set5 = findViewById(R.id.set5);
-
+        initColors();
         leftButton.setOnClickListener(this);
         rightButton.setOnClickListener(this);
         bottomCard.setOnClickListener(this);
@@ -171,5 +175,36 @@ public class LearnTestActivity extends AppCompatActivity implements View.OnClick
                 }
             });
         }
+    }
+
+    public void initColors(){
+        colorComb = new ArrayList<>();
+        colorComb.add(new int[]{0xffCADBC0, 0xffC94277, 0xff2F0A28});
+        colorComb.add(new int[]{0xff34454d, 0xff61e97a, 0xff8a8a8a});
+        colorComb.add(new int[]{0xff022B3A, 0xffBFDBF7, 0xff1F7A8C});
+        colorComb.add(new int[]{0xff4F6D7A, 0xffC0D6DF, 0xff04A777});
+        colorComb.add(new int[]{0xffD81E5B, 0xff23395B, 0xffB9E3C6});
+        colorComb.add(new int[]{0xff373F51, 0xff008DD5, 0xffF56476});
+        colorComb.add(new int[]{0xffB7ADCF, 0xff22181C, 0xff84DCCF});
+        colorComb.add(new int[]{0xff7F95D1, 0xff77625C, 0xff84DCCF});
+        colorComb.add(new int[]{0xff32292F, 0xff4F646F, 0xff84DCCF});
+        colorComb.add(new int[]{0xff3C3744, 0xff3D52D5, 0xff84DCCF});
+        colorComb.add(new int[]{0xff33658A, 0xff86BBD8, 0xff3D52D5});
+        colorComb.add(new int[]{0xff8EDCE6, 0xffD5DCF9, 0xff3D52D5});
+        colorComb.add(new int[]{0xffD5DCF9, 0xff3D52D5, 0xff84DCCF});
+        colorComb.add(new int[]{0xff85BDBF, 0xff57737A, 0xff040F0F});
+        colorComb.add(new int[]{0xff93B5C6, 0xffDDEDAA, 0xffBD4F6C});
+        colorComb.add(new int[]{0xff011638, 0xff2E294E, 0xff9055A2});
+        colorComb.add(new int[]{0xff706C61, 0xffBCD979, 0xff99C5B5});
+        colorComb.add(new int[]{0xffACACDE, 0xffABDAFC, 0xff545E75});
+
+        int palette = ThreadLocalRandom.current().nextInt(0, colorComb.size());
+//        System.out.println(Integer.toHexString(colorComb.get(palette)[0]));
+//        System.out.println(Integer.toHexString(colorComb.get(palette)[1]));
+//        System.out.println(Integer.toHexString(colorComb.get(palette)[2]));
+
+        leftButton.setCardBackgroundColor(colorComb.get(palette)[0]);
+        rightButton.setCardBackgroundColor(colorComb.get(palette)[1]);
+        bottomCard.setCardBackgroundColor(colorComb.get(palette)[2]);
     }
 }
