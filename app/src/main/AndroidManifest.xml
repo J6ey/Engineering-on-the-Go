@@ -66,9 +66,8 @@
             android:name=".TestActivity"
             android:launchMode="singleTop"/>
         <activity android:name=".SettingsActivity"
-            android:noHistory="true"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:parentActivityName=".TestActivity"/>
     </application>
 </manifest>

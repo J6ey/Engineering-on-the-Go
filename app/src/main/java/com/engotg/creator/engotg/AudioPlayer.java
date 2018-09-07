@@ -171,15 +171,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!PlaceholderFragment.mediaPlayer.isPlaying()){
-                    // Plays
-                    PlaceholderFragment.mediaPlayer.start();
-                    if(onStart){
-                        setItemSelected(PlaceholderFragment.leftAudioList.getRootView());
-                        onStart = false;
-                    }
-                    button_pause_play.setImageResource(R.drawable.ic_pause);
-                } else {
+                if(PlaceholderFragment.mediaPlayer.isPlaying()){
                     // Pauses
                     PlaceholderFragment.mediaPlayer.pause();
                     button_pause_play.setImageResource(R.drawable.ic_play);

@@ -27,7 +27,7 @@ import io.paperdb.Paper;
 
 public class LoadingActivity extends AppCompatActivity{
 
-    private TextView loadingText;
+    static TextView loadingText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

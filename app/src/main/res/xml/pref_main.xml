@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.engotg.creator.engotg.AppPreferenceCategory
-        android:title="General">
+        android:title="Quiz">
         <com.engotg.creator.engotg.AppCheckBoxPreference
             android:defaultValue="true"
             android:key="auto_speak"
@@ -22,6 +22,13 @@
             android:key="enableTips"
             android:summary="Remind you available speech commands"
             android:title="Enable speech tips" />
+
+        <com.engotg.creator.engotg.AppCheckBoxPreference
+            android:defaultValue="true"
+            android:key="twoTries"
+            android:summary="You get two tries for each question"
+            android:title="Enable two tries" />
+
     </com.engotg.creator.engotg.AppPreferenceCategory>
 
 
@@ -63,14 +70,11 @@
             android:summary="Change Text-to-Speech voice data"
             android:title="Change voice" />
 
-
-
     </com.engotg.creator.engotg.AppPreferenceCategory>
 
     <com.engotg.creator.engotg.AppPreferenceCategory android:title="@string/pref_header_about">
-
         <com.engotg.creator.engotg.AppPreference
-            android:summary="1.0"
+            android:summary="1.0.2"
             android:title="@string/title_version" />
 
     </com.engotg.creator.engotg.AppPreferenceCategory>

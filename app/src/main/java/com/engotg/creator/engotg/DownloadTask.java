@@ -45,7 +45,7 @@ public class DownloadTask {
 
     private static final String TAG = "Download Task";
     private Context context;
-    private static TextView loadingText;
+    private TextView loadingText;
     private final String topics[] = {"Forces Moments", "Forces Moments", "Internal External Forces", "Internal External Forces"
             , "Internal Forces Stresses", "Internal Forces Stresses"};
     private final String testTopics[] = {"Forces Moments", "Internal External Forces", "Internal Forces Stresses"};
@@ -137,15 +137,16 @@ public class DownloadTask {
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
             if(outputFile != null){
                 Paper.book().write("version", version);
-                loadingText.setText("Update success.");
+                LoadingActivity.loadingText.setText("Update success.");
                 Log.d(TAG, "Download success.");
             } else {
-                loadingText.setText("Update failed. Please retry.");
+                LoadingActivity.loadingText.setText("Update failed. Please retry.");
                 Log.e(TAG, "Download failed.");
             }
-            super.onPostExecute(aVoid);
+
             ((Activity) context).startActivity(intent);
             ((Activity) context).finish();
         }

@@ -29,6 +29,16 @@ import static com.engotg.creator.engotg.AudioPlayer.totalTime;
 
 public class PlaceholderFragment extends Fragment {
 
+    private static class Pair {
+        String text;
+        boolean flag;
+
+        Pair(String text, boolean flag){
+            this.text = text;
+            this.flag = flag;
+        }
+    }
+
     public class LeftAudioAdapter extends BaseAdapter {
 
         @Override
@@ -48,12 +58,11 @@ public class PlaceholderFragment extends Fragment {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            setItemNormal();
             view = getLayoutInflater().inflate(R.layout.audio_list_layout, null);
             TextView audioText = view.findViewById(R.id.audio_text);
             TextView duration = view.findViewById(R.id.duration);
-            audioText.setText(leftAudio.get(i));
-            String pathStr = apkStorageLeft.getAbsolutePath() + "/" + leftAudio.get(i);
+            audioText.setText(leftAudio.get(i).text);
+            String pathStr = apkStorageLeft.getAbsolutePath() + "/" + leftAudio.get(i).text;
             Uri uri = Uri.parse(pathStr);
             MediaMetadataRetriever mmr = new MediaMetadataRetriever();
             mmr.setDataSource(viewGroup.getContext(), uri);
@@ -61,6 +70,13 @@ public class PlaceholderFragment extends Fragment {
             int millisecond = Integer.parseInt(durationStr);
             duration.setText(createTimeLabel(millisecond));
             duration.setTypeface(typeface);
+            if(leftAudio.get(i).flag){
+                audioText.setTextColor(getResources().getColor(R.color.orange));
+                audioText.setTypeface(typeface, Typeface.BOLD);
+            } else {
+                audioText.setTextColor(getResources().getColor(R.color.mimoWhite));
+                audioText.setTypeface(typeface);
+            }
             return view;
         }
     }
@@ -87,8 +103,8 @@ public class PlaceholderFragment extends Fragment {
             view = getLayoutInflater().inflate(R.layout.audio_list_layout, null);
             TextView audioText = view.findViewById(R.id.audio_text);
             TextView duration = view.findViewById(R.id.duration);
-            audioText.setText(rightAudio.get(i));
-            String pathStr = apkStorageRight.getAbsolutePath() + "/" + rightAudio.get(i);
+            audioText.setText(rightAudio.get(i).text);
+            String pathStr = apkStorageRight.getAbsolutePath() + "/" + rightAudio.get(i).text;
             Uri uri = Uri.parse(pathStr);
             MediaMetadataRetriever mmr = new MediaMetadataRetriever();
             mmr.setDataSource(viewGroup.getContext(), uri);
@@ -96,20 +112,27 @@ public class PlaceholderFragment extends Fragment {
             int millisecond = Integer.parseInt(durationStr);
             duration.setText(createTimeLabel(millisecond));
             duration.setTypeface(typeface);
+            if(rightAudio.get(i).flag){
+                audioText.setTextColor(getResources().getColor(R.color.orange));
+                audioText.setTypeface(typeface, Typeface.BOLD);
+            } else {
+                audioText.setTextColor(getResources().getColor(R.color.mimoWhite));
+                audioText.setTypeface(typeface);
+            }
             return view;
         }
     }
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     public static ListView leftAudioList, rightAudioList;
-    private ArrayList<String> audioLeftList, audioRightList; // sample items
-    private static List<String> leftAudio, rightAudio; // Existing audios
+    private static List<Pair> leftAudio, rightAudio; // Existing audios
     static MediaPlayer mediaPlayer;
     private final String downloadDirectory = "EngOTG_data";
     private File apkStorageLeft, apkStorageRight;
     private LeftAudioAdapter leftAudioAdapter;
     private RightAudioAdapter rightAudioAdapter;
     private Typeface typeface;
+    private int clickedPos = 0;
 
     public PlaceholderFragment() {
     }
@@ -128,24 +151,6 @@ public class PlaceholderFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        audioLeftList = new ArrayList<>();
-        audioLeftList.add("hello");
-        audioLeftList.add("hello2");
-        audioLeftList.add("hello3");
-        audioLeftList.add("hello4");
-        audioLeftList.add("hello5");
-        audioRightList = new ArrayList<>();
-        audioRightList.add("world");
-        audioRightList.add("world2");
-        audioRightList.add("world3");
-        audioRightList.add("world4");
-        audioRightList.add("world5");
-        audioRightList.add("world6");
-        audioRightList.add("world7");
-        audioRightList.add("world8");
-        audioRightList.add("world9");
-        audioRightList.add("world10");
-
 
         View rootView = null;
         String topic = "", leftSubTopic = "", rightSubTopic ="";
@@ -173,8 +178,15 @@ public class PlaceholderFragment extends Fragment {
                 + downloadDirectory + "/" + topic + "/" + leftSubTopic + "/");
         apkStorageRight = new File(getContext().getFilesDir() + "/"
                 + downloadDirectory + "/" + topic + "/" + rightSubTopic + "/");
-        leftAudio = new ArrayList<>(Arrays.asList(apkStorageLeft.list()));
-        rightAudio = new ArrayList<>(Arrays.asList(apkStorageRight.list()));
+        leftAudio = new ArrayList<>();
+        rightAudio = new ArrayList<>();
+
+        for (int i = 0; i < Arrays.asList(apkStorageLeft.list()).size(); i++) {
+            leftAudio.add(new Pair(Arrays.asList(apkStorageLeft.list()).get(i), false));
+        }
+        for (int i = 0; i < Arrays.asList(apkStorageRight.list()).size(); i++) {
+            rightAudio.add(new Pair(Arrays.asList(apkStorageRight.list()).get(i), false));
+        }
 
         leftAudioAdapter = new LeftAudioAdapter();
         rightAudioAdapter = new RightAudioAdapter();
@@ -189,14 +201,12 @@ public class PlaceholderFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         AudioPlayer.onStart = false;
-                        setItemNormal();
-                        setItemSelected(view);
                         if(mediaPlayer.isPlaying()){
                             mediaPlayer.stop();
                         }
                         try {
                             mediaPlayer = new MediaPlayer();
-                            mediaPlayer.setDataSource(apkStorageLeft.getAbsolutePath() + "/" + leftAudio.get(position));
+                            mediaPlayer.setDataSource(apkStorageLeft.getAbsolutePath() + "/" + leftAudio.get(position).text);
                             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                             mediaPlayer.prepare();
                         } catch (Exception e){
@@ -208,6 +218,10 @@ public class PlaceholderFragment extends Fragment {
                         mediaPlayer.seekTo(0);
                         totalTime = mediaPlayer.getDuration();
                         AudioPlayer.seekbar.setMax(totalTime);
+                        leftAudio.get(clickedPos).flag = false;
+                        leftAudio.get(position).flag = true;
+                        clickedPos = position;
+                        leftAudioAdapter.notifyDataSetChanged();
                     }
                 });
                 break;
@@ -219,14 +233,12 @@ public class PlaceholderFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         AudioPlayer.onStart = false;
-                        setItemNormal();
-                        setItemSelected(view);
                         if (mediaPlayer.isPlaying()) {
                             mediaPlayer.stop();
                         }
                         try {
                             mediaPlayer = new MediaPlayer();
-                            mediaPlayer.setDataSource(apkStorageRight.getAbsolutePath() + "/" + rightAudio.get(position));
+                            mediaPlayer.setDataSource(apkStorageRight.getAbsolutePath() + "/" + rightAudio.get(position).text);
                             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                             mediaPlayer.prepare();
                         } catch (Exception e) {
@@ -238,6 +250,10 @@ public class PlaceholderFragment extends Fragment {
                         mediaPlayer.seekTo(0);
                         totalTime = mediaPlayer.getDuration();
                         AudioPlayer.seekbar.setMax(totalTime);
+                        rightAudio.get(clickedPos).flag = false;
+                        rightAudio.get(position).flag = true;
+                        clickedPos = position;
+                        rightAudioAdapter.notifyDataSetChanged();
                     }
                 });
                 break;

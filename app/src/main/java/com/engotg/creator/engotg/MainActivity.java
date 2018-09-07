@@ -144,9 +144,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             purpMicro.setBackgroundColor(0xff9553f1);
         } else {
             int palette = ThreadLocalRandom.current().nextInt(0, colorComb.size());
-        System.out.println(Integer.toHexString(colorComb.get(palette)[0]));
-        System.out.println(Integer.toHexString(colorComb.get(palette)[1]));
-        System.out.println(Integer.toHexString(colorComb.get(palette)[2]));
+//        System.out.println(Integer.toHexString(colorComb.get(palette)[0]));
+//        System.out.println(Integer.toHexString(colorComb.get(palette)[1]));
+//        System.out.println(Integer.toHexString(colorComb.get(palette)[2]));
             greenMicro.setBackgroundColor(colorComb.get(palette)[0]);
             blueMicro.setBackgroundColor(colorComb.get(palette)[1]);
             purpMicro.setBackgroundColor(colorComb.get(palette)[2]);

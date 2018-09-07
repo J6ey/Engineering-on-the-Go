@@ -11,6 +11,7 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -26,6 +27,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.tooltip.OnClickListener;
 import com.tooltip.OnDismissListener;
 import com.tooltip.Tooltip;
 
@@ -52,7 +55,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private TextToSpeech tts;
     private int questionLength, currentNum, setVal, topicVal, score, wrongCount;
     private LinearLayoutCompat questionFrame, scoreFrame;
-    static boolean onResults, autoRead, autoPrompt, enableTips;
+    static boolean onResults, autoRead, autoPrompt, enableTips, twoTries;
     static CardView tryAgain, menu;
     static Tooltip tipInfo, errorInfo;
     private static Typeface typeface;
@@ -88,7 +91,6 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         onResults = false;
-        wrongCount = 0;
         currentNum = 1;
         score = 0;
         topicVal = intent.getExtras().getInt("topic");
@@ -129,13 +131,13 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         initSettings();
         tts = new TextToSpeech(this, this);
         initTooltip();
-
+        wrongCount = twoTries ? 0 : 1;
         // Must be declared for each question
         setChoiceAmount();
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wrongCount = 0;
+                wrongCount = twoTries ? 0 : 1;
                 if (SpeechListener.isListening) {
                     micBtn.setImageResource(R.drawable.ico_mic);
                     sr.cancel();
@@ -297,7 +299,6 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     public void onRestart() {
         super.onRestart();
         initSettings();
-//        initPitchSpeed();
     }
 
     public void initSettings() {
@@ -305,6 +306,8 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         autoRead = sharedPrefs.getBoolean("auto_speak", true);
         autoPrompt = sharedPrefs.getBoolean("auto_input", true);
         enableTips = sharedPrefs.getBoolean("enableTips", true);
+        twoTries = sharedPrefs.getBoolean("twoTries", true);
+        wrongCount = twoTries ? 0 : 1;
     }
 
     public void initPitchSpeed(){
@@ -370,15 +373,6 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void onStop(){
-//        if(tts.isSpeaking()){
-//            speakBtn.setImageResource(R.drawable.ico_speak);
-//            tts.stop();
-//        }
-//        if(SpeechListener.isListening){
-//            SpeechListener.isListening = false;
-//            micBtn.setImageResource(R.drawable.ico_mic);
-//            sr.stopListening();
-//        }
         super.onStop();
     }
 
@@ -457,7 +451,6 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
     public void explain(){
         speakBtn.setImageResource(R.drawable.ico_stop);
-
         Bundle params = new Bundle();
         params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "onExplain");
         if(enableTips) {
@@ -498,8 +491,8 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
     public void initTooltip(){
         tipInfo = new Tooltip.Builder(answerInfo).setText(explanation)
-                .setTextColor(getResources().getColor(R.color.black)).setGravity(Gravity.TOP).setCornerRadius(16f).setDismissOnClick(true)
-                .setCancelable(true).setTypeface(typeface).setBackgroundColor(getResources().getColor(R.color.orange)).build();
+                .setTextColor(getResources().getColor(R.color.mimoWhite)).setGravity(Gravity.TOP).setCornerRadius(16f).setDismissOnClick(false)
+                .setCancelable(true).setTypeface(typeface).setBackgroundColor(getResources().getColor(R.color.blueGrey)).build();
     }
 
     public static void initErrorTip(){
@@ -511,6 +504,12 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
     public static void showErrorTip(){
         initErrorTip();
+        errorInfo.setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                initErrorTip();
+            }
+        });
         errorInfo.show();
     }
 
@@ -518,6 +517,13 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         if (autoRead){
             explain();
         }
+        tipInfo.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(@NonNull Tooltip tooltip) {
+                tts.stop();
+                explain();
+            }
+        });
         tipInfo.setOnDismissListener(new OnDismissListener() {
             @Override
             public void onDismiss() {

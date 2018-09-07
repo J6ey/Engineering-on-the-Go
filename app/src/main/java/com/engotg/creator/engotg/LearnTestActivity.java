@@ -18,6 +18,7 @@ import android.support.v7.widget.CardView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ public class LearnTestActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout topSet, bottomSet;
     private Button set1, set2, set3, set4, set5;
     private ImageView chemical, wave;
+    private ImageButton settings;
     private Intent intent;
     private int topicVal;
     private String topicTitle;
@@ -56,6 +58,7 @@ public class LearnTestActivity extends AppCompatActivity implements View.OnClick
         Glide.with(this).load(R.drawable.waves).into(wave);
         chemical.setTag(1);
         wave.setTag(1);
+        settings = findViewById(R.id.settingsBtn);
         leftButton = findViewById(R.id.leftButton);
         rightButton = findViewById(R.id.rightButton);
         bottomCard = findViewById(R.id.bottomCard);
@@ -73,6 +76,7 @@ public class LearnTestActivity extends AppCompatActivity implements View.OnClick
         set4 = findViewById(R.id.set4);
         set5 = findViewById(R.id.set5);
         initColors();
+        settings.setOnClickListener(this);
         leftButton.setOnClickListener(this);
         rightButton.setOnClickListener(this);
         bottomCard.setOnClickListener(this);
@@ -114,7 +118,7 @@ public class LearnTestActivity extends AppCompatActivity implements View.OnClick
                 bottomSet.setVisibility(View.INVISIBLE);
             }
             finish();
-        } else {
+        } else if(v.getId() == R.id.rightButton){
             if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO)
                     != PackageManager.PERMISSION_GRANTED){
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},
@@ -174,6 +178,8 @@ public class LearnTestActivity extends AppCompatActivity implements View.OnClick
                     onSetClick();
                 }
             });
+        } else {
+            startActivity(new Intent(this, SettingsActivity.class));
         }
     }
 
@@ -206,5 +212,6 @@ public class LearnTestActivity extends AppCompatActivity implements View.OnClick
         leftButton.setCardBackgroundColor(colorComb.get(palette)[0]);
         rightButton.setCardBackgroundColor(colorComb.get(palette)[1]);
         bottomCard.setCardBackgroundColor(colorComb.get(palette)[2]);
+        settings.setBackgroundColor(colorComb.get(palette)[2]);
     }
 }
