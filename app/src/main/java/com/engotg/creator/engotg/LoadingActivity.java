@@ -81,7 +81,7 @@ public class LoadingActivity extends AppCompatActivity{
         if(isConnectedToInternet()){
             new DownloadTask(LoadingActivity.this, loadingText, serverVer, getIntentForNext());
         } else {
-            loadingText.setText("Update failed: No network connection\nPlease try again");
+            loadingText.setText("Update failed: No network connection\nPlease exit and try again");
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override

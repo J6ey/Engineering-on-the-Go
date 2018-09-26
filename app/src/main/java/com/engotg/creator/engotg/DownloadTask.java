@@ -132,7 +132,7 @@ public class DownloadTask {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            loadingText.setText("Downloading audio files...");
+            loadingText.setText("Downloading Audio Files...");
         }
 
         @Override

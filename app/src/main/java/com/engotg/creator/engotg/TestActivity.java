@@ -11,6 +11,7 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.speech.tts.Voice;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -22,22 +23,17 @@ import android.text.SpannableStringBuilder;
 import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import com.tooltip.OnClickListener;
 import com.tooltip.OnDismissListener;
 import com.tooltip.Tooltip;
-
-import org.w3c.dom.Text;
-
-import java.sql.SQLOutput;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -53,7 +49,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     static ImageButton answerInfo, micBtn, speakBtn, next, settings;
     private SpeechRecognizer sr;
     private TextToSpeech tts;
-    private int questionLength, currentNum, setVal, topicVal, score, wrongCount;
+    private int questionLength, currentNum, setVal, topicVal, score, wrongCount, localeVal;
     private LinearLayoutCompat questionFrame, scoreFrame;
     static boolean onResults, autoRead, autoPrompt, enableTips, twoTries;
     static CardView tryAgain, menu;
@@ -65,6 +61,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private static Context mContext;
     private SharedPreferences sharedPrefs;
     private double pitch, speed;
+    private List<Locale> locList;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,9 +116,12 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         answer = Paper.book().read(topic + "|" +
                 "set " + setVal + "|Answer|" + randomQuestions[0]);
 
-        // Gets list of choices on 1st question
+        // Gets list of choices on 1st question and shuffles them
         choices = Paper.book().read(topic + "|" +
                 "set " + setVal + "|Choices|" + randomQuestions[0]);
+        List<String> choicesList = new ArrayList<>(choices);
+        Collections.shuffle(choicesList);
+        choices = new HashSet<>(choicesList);
 
         // Gets first explanation
         explanation = Paper.book().read(topic + "|" +
@@ -129,6 +129,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
         questionsLeft.setText(currentNum + "/" + questionLength);
         initSettings();
+        locList = new ArrayList<>();
         tts = new TextToSpeech(this, this);
         initTooltip();
         wrongCount = twoTries ? 0 : 1;
@@ -162,6 +163,9 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                             "set " + setVal + "|Answer|" + randomQuestions[currentNum]);
                     choices = Paper.book().read(topic + '|' +
                             "set " + setVal + "|Choices|" + randomQuestions[currentNum]);
+                    List<String> choicesList = new ArrayList<>(choices);
+                    Collections.shuffle(choicesList);
+                    choices = new HashSet<>(choicesList);
                     setChoiceAmount();
                     currentNum++;
                     if (autoRead) {
@@ -304,7 +308,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     public void initSettings() {
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         autoRead = sharedPrefs.getBoolean("auto_speak", true);
-        autoPrompt = sharedPrefs.getBoolean("auto_input", true);
+        autoPrompt = sharedPrefs.getBoolean("auto_input", false);
         enableTips = sharedPrefs.getBoolean("enableTips", true);
         twoTries = sharedPrefs.getBoolean("twoTries", true);
         wrongCount = twoTries ? 0 : 1;
@@ -330,10 +334,13 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             if(resultCode == Activity.RESULT_OK){
                 pitch = data.getDoubleExtra("pitch", 1);
                 speed = data.getDoubleExtra("speed", 1);
+                localeVal = data.getIntExtra("locale", 0);
                 Paper.book().write("pitchKey", pitch);
                 Paper.book().write("speedKey", speed);
+                Paper.book().write("localeKey", localeVal);
                 tts.setPitch((float) pitch);
                 tts.setSpeechRate((float) speed);
+                tts.setLanguage(locList.get(localeVal));
             }
             if(resultCode == Activity.RESULT_CANCELED){
             }
@@ -378,7 +385,24 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onInit(int status){
         if(status == TextToSpeech.SUCCESS){
-            int result = tts.setLanguage(Locale.US);
+            if(Paper.book().read("locList") == null) {
+                for (Locale loc : tts.getAvailableLanguages()) {
+                    if (loc.toLanguageTag().contains("en")) {
+                        locList.add(Locale.forLanguageTag(loc.toLanguageTag()));
+                    }
+                }
+                Paper.book().write("locList", locList);
+            } else {
+                locList = Paper.book().read("locList");
+            }
+            int result;
+            if(Paper.book().read("localeKey") == null) {
+                result = tts.setLanguage(locList.get(0));
+                Paper.book().write("localeKey", 0);
+            } else {
+                result = tts.setLanguage(locList.get(Integer.valueOf(Paper.book().read("localeKey").toString())));
+            }
+
             if(result == TextToSpeech.LANG_MISSING_DATA ||
                     result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 Log.e("TTS","This language is not supported");

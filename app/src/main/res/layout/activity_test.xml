@@ -30,9 +30,8 @@
         android:gravity="center"
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
-        android:padding="3dp"
         android:id="@+id/questionFrame"
-        android:layout_weight="35"
+        android:layout_weight="25"
         android:layout_width="match_parent"
         android:layout_height="0dp">
         <TextView
@@ -49,7 +48,7 @@
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:gravity="center"
         android:id="@+id/scoreFrame"
         android:layout_width="match_parent"
@@ -66,8 +65,9 @@
 
 
     <LinearLayout
+        android:gravity="center"
         android:layout_marginBottom="10dp"
-        android:layout_weight="75"
+        android:layout_weight="85"
         android:layout_gravity="center"
         android:orientation="vertical"
         android:layout_width="match_parent"

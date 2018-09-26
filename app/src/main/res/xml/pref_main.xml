@@ -12,7 +12,7 @@
             android:title="Auto speak" />
 
         <com.engotg.creator.engotg.AppCheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="auto_input"
             android:summary="Automatically prompt speech input"
             android:title="Auto prompt" />
@@ -65,10 +65,18 @@
             android:summary="Play a short demonstration of speech synthesis"
             android:title="Listen to an example"/>
 
+        <com.engotg.creator.engotg.AppListPreference
+            android:defaultValue="0"
+            android:dialogTitle="Accents"
+            android:key="accent_key"
+            android:summary="Change Text-to-speech (English) accents"
+            android:title="Change accent"
+            />
+
         <com.engotg.creator.engotg.AppPreference
             android:key="voice_data"
-            android:summary="Change Text-to-Speech voice data"
-            android:title="Change voice" />
+            android:summary="Install or change (English) voices"
+            android:title="Change voice data" />
 
     </com.engotg.creator.engotg.AppPreferenceCategory>
 

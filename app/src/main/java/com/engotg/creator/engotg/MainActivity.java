@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setTitle("Select a topic");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         validated = false;
         context = this;
         typeface = Typeface.createFromAsset(getResources().getAssets(), "fibra_one_regular.otf");
@@ -85,9 +84,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     protected void onRestart(){
         super.onRestart();
-        finish();
-        startActivity(getIntent().putExtra("validated", true));
-        setMetaText();
+        if(validated){
+            finish();
+            startActivity(getIntent().putExtra("validated", true));
+            setMetaText();
+        }
     }
 
     public static void setMetaText(){
