@@ -6,7 +6,7 @@
   * increasing student attainment of engineering concepts 
   * provide students an effective method to study in different settings
 
-## Abstract
+### Abstract
 
 There is significant evidence in educational research that students benefit the most from using mixed modality
 learning styles (visual, auditory, and kinesthetic). Although auditory learning styles, such as recorded study materials
@@ -17,7 +17,7 @@ of technology savvy students. Thus, the objective of this app is to investigate 
 could improve student learning and attainment of basic engineering concepts, that are generally known by students to be
 difficult and require substantial processing and repetitions.
 
-## Impact on Student Learning
+### Impact on Student Learning
 
 With a new generation of ‘digital native’ students, i.e., grew up with technology, it is anticipated that the use of an audio
 study app that is accessible on their phones, would align with their lifestyle. It will provide them with a learning resource
