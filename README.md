@@ -1,9 +1,9 @@
 # Engineering on the Go (EngOTG)
 ***
-  EngOTG is an Android project that provides auditory learning in physics concepts via audio reviews and interactive 
+  EngOTG is an Android project that provides auditory learning in physics concepts via audio lectures and interactive 
   voice response quizzes (IVR) for engineering students with the goal of 
   
-  * increasing the student attainment of engineering concepts 
+  * increasing student attainment of engineering concepts 
   * provide students an effective method to study in different settings
 
 ### Abstract
