@@ -6,7 +6,7 @@
   * increasing the student attainment of engineering concepts 
   * provide students an effective method to study in different settings
 
-### ABSTRACT
+### Abstract
 
 There is significant evidence in educational research that students benefit the most from using mixed modality
 learning styles (visual, auditory, and kinesthetic). Although auditory learning styles, such as recorded study materials
